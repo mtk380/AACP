@@ -135,3 +135,11 @@ Optional env vars:
 
 - This code is designed as a testnet-grade baseline and intentionally keeps external integrations as stubs.
 - Proto generation is wired through `buf` or `protoc` if available locally.
+
+## Contributing
+
+Contributions are welcome. Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a pull request.
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
