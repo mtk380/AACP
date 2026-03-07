@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package aacp.v1.rep;
+
+option go_package = "aacp/proto/aacp/v1/rep;rep";
+
+message ReputationScore {
+  bytes entity = 1;
+  string entity_type = 2;
+  uint32 quality_score = 3;
+  uint32 timeliness_score = 4;
+  uint32 reliability_score = 5;
+  uint32 dispute_score = 6;
+  uint32 network_score = 7;
+  uint32 total_score = 8;
+  uint64 total_tasks = 9;
+  uint64 success_tasks = 10;
+  uint64 failed_tasks = 11;
+  uint64 disputed_tasks = 12;
+  int64 last_updated = 13;
+  uint64 update_epoch = 14;
+}

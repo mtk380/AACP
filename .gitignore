@@ -1,0 +1,9 @@
+/bin/
+/build/
+*.log
+*.out
+*.test
+coverage.out
+*.pb.go
+.DS_Store
+/testnet/

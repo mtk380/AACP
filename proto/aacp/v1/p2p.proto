@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package aacp.v1.p2p;
+
+option go_package = "aacp/proto/aacp/v1/p2p;p2p";
+
+import "aacp/v1/node.proto";
+
+message P2PMessage {
+  string protocol = 1;
+  string msg_type = 2;
+  bytes sender = 3;
+  uint64 seq = 4;
+  int64 timestamp = 5;
+  bytes payload = 6;
+  bytes signature = 7;
+}
+
+message NodeAnnounce {
+  bytes pubkey = 1;
+  aacp.v1.node.NodeTier tier = 2;
+  string endpoint = 3;
+  string region = 4;
+  repeated string capabilities = 5;
+  uint32 load_percent = 6;
+  int64 announce_at = 7;
+}

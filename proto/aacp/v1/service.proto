@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package aacp.v1;
+
+option go_package = "aacp/proto/aacp/v1;v1";
+
+import "aacp/v1/amx.proto";
+import "aacp/v1/aap.proto";
+import "aacp/v1/weave.proto";
+import "aacp/v1/rep.proto";
+import "aacp/v1/node.proto";
+import "aacp/v1/tx.proto";
+import "aacp/v1/common.proto";
+
+service TxService {
+  rpc BroadcastTx(BroadcastTxRequest) returns (BroadcastTxResponse);
+  rpc SimulateTx(SimulateTxRequest) returns (SimulateTxResponse);
+  rpc GetTx(GetTxRequest) returns (GetTxResponse);
+}
+
+message BroadcastTxRequest {
+  bytes tx_bytes = 1;
+  BroadcastMode mode = 2;
+}
+
+enum BroadcastMode {
+  BROADCAST_SYNC = 0;
+  BROADCAST_ASYNC = 1;
+  BROADCAST_COMMIT = 2;
+}
+
+message BroadcastTxResponse {
+  string tx_hash = 1;
+  uint32 code = 2;
+  string log = 3;
+  int64 height = 4;
+}
+
+message SimulateTxRequest {
+  bytes tx_bytes = 1;
+}
+
+message SimulateTxResponse {
+  uint64 gas_used = 1;
+  uint32 code = 2;
+  string log = 3;
+}
+
+message GetTxRequest {
+  string tx_hash = 1;
+}
+
+message GetTxResponse {
+  string tx_hash = 1;
+  uint32 code = 2;
+  int64 height = 3;
+  bytes tx_bytes = 4;
+}
+
+service AMXQueryService {
+  rpc GetListing(GetListingRequest) returns (aacp.v1.amx.Listing);
+  rpc SearchListings(SearchRequest) returns (SearchResponse);
+  rpc GetOrder(GetOrderRequest) returns (aacp.v1.amx.Order);
+}
+
+message GetListingRequest {
+  string listing_id = 1;
+}
+
+message GetOrderRequest {
+  string order_id = 1;
+}
+
+message SearchRequest {
+  repeated string required_caps = 1;
+  string currency = 2;
+  string max_price = 3;
+  string region = 4;
+  uint32 min_rep_score = 5;
+  uint32 offset = 6;
+  uint32 limit = 7;
+  string sort_by = 8;
+}
+
+message SearchResponse {
+  repeated aacp.v1.amx.Listing listings = 1;
+  uint64 total_count = 2;
+}
+
+service AAPQueryService {
+  rpc GetTask(GetTaskRequest) returns (aacp.v1.aap.Task);
+}
+
+message GetTaskRequest {
+  string task_id = 1;
+}
+
+service WeaveQueryService {
+  rpc GetDAG(GetDAGRequest) returns (aacp.v1.weave.TaskDAG);
+}
+
+message GetDAGRequest {
+  string dag_id = 1;
+}
+
+service RepQueryService {
+  rpc GetReputation(GetRepRequest) returns (aacp.v1.rep.ReputationScore);
+}
+
+message GetRepRequest {
+  bytes entity = 1;
+}
+
+service NodeQueryService {
+  rpc GetNodeInfo(GetNodeInfoRequest) returns (aacp.v1.node.NodeRegistration);
+}
+
+message GetNodeInfoRequest {
+  bytes pubkey = 1;
+}

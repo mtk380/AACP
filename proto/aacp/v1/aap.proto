@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package aacp.v1.aap;
+
+option go_package = "aacp/proto/aacp/v1/aap;aap";
+
+import "aacp/v1/common.proto";
+
+message SLA {
+  string task_id = 1;
+  bytes consumer = 2;
+  bytes provider = 3;
+  uint32 max_latency_ms = 4;
+  float min_accuracy = 5;
+  uint32 max_retries = 6;
+  uint64 timeout_sec = 7;
+  aacp.v1.Money service_fee = 8;
+  aacp.v1.Money deposit_amount = 9;
+  uint32 commission_bps = 10;
+  bytes consumer_sig = 11;
+  bytes provider_sig = 12;
+  int64 signed_at = 13;
+  int64 expires_at = 14;
+}
+
+message Task {
+  string task_id = 1;
+  string order_id = 2;
+  bytes consumer = 3;
+  bytes provider = 4;
+  SLA sla = 5;
+  TaskStatus status = 6;
+  string result_hash = 7;
+  string result_ipfs = 8;
+  string evidence_root = 9;
+  int64 created_at = 10;
+  int64 sla_signed_at = 11;
+  int64 started_at = 12;
+  int64 completed_at = 13;
+  uint64 heartbeat_seq = 14;
+  int64 last_heartbeat = 15;
+  uint32 retry_count = 16;
+  uint32 max_retries = 17;
+}
+
+enum TaskStatus {
+  TASK_CREATED = 0;
+  TASK_SLA_SIGNED = 1;
+  TASK_DEPOSITED = 2;
+  TASK_AUTHORIZED = 3;
+  TASK_EXECUTING = 4;
+  TASK_SUBMIT_RESULT = 5;
+  TASK_VERIFYING = 6;
+  TASK_VERIFIED = 7;
+  TASK_VER_FAIL = 8;
+  TASK_SETTLING = 9;
+  TASK_COMPLETED = 10;
+  TASK_FAILED = 11;
+  TASK_DISPUTED = 12;
+  TASK_RESOLVED = 13;
+}
+
+message Heartbeat {
+  string task_id = 1;
+  uint64 seq = 2;
+  uint32 progress = 3;
+  string status_msg = 4;
+  int64 timestamp = 5;
+  bytes signature = 6;
+}
+
+message SubmitResultPayload {
+  string task_id = 1;
+  bytes result_data = 2;
+  string result_ipfs = 3;
+  string content_hash = 4;
+  string mime_type = 5;
+}
+
+message VerificationReport {
+  string task_id = 1;
+  bytes verifier = 2;
+  bool passed = 3;
+  string reason = 4;
+  float accuracy = 5;
+  uint32 latency_ms = 6;
+  int64 verified_at = 7;
+  bytes signature = 8;
+}

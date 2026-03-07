@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package aacp.v1.weave;
+
+option go_package = "aacp/proto/aacp/v1/weave;weave";
+
+import "aacp/v1/common.proto";
+
+message DataRef {
+  bytes inline = 1;
+  string ipfs_cid = 2;
+  string content_hash = 3;
+  uint64 size_bytes = 4;
+  string mime_type = 5;
+  bool encrypted = 6;
+}
+
+message DAGNode {
+  string node_id = 1;
+  string label = 2;
+  NodeType type = 3;
+  string sub_task_id = 4;
+  string listing_id = 5;
+  repeated string required_caps = 6;
+  string input_schema = 7;
+  string output_schema = 8;
+  DataRef input_data = 9;
+  DataRef output_data = 10;
+  NodeStatus status = 11;
+  int64 started_at = 12;
+  int64 finished_at = 13;
+  uint32 retry_count = 14;
+  uint32 max_retries = 15;
+}
+
+message DAGEdge {
+  string from_node = 1;
+  string to_node = 2;
+  string condition = 3;
+}
+
+message TaskDAG {
+  string dag_id = 1;
+  string root_task = 2;
+  bytes orchestrator = 3;
+  repeated DAGNode nodes = 4;
+  repeated DAGEdge edges = 5;
+  DAGStatus status = 6;
+  int64 created_at = 7;
+  int64 started_at = 8;
+  int64 finished_at = 9;
+  aacp.v1.Money total_budget = 10;
+  uint64 global_timeout_sec = 11;
+}
+
+enum NodeType {
+  NODE_TASK = 0;
+  NODE_FORK = 1;
+  NODE_JOIN = 2;
+  NODE_COND = 3;
+  NODE_LOOP = 4;
+}
+
+enum NodeStatus {
+  NODE_PENDING = 0;
+  NODE_READY = 1;
+  NODE_RUNNING = 2;
+  NODE_COMPLETED = 3;
+  NODE_FAILED = 4;
+  NODE_SKIPPED = 5;
+}
+
+enum DAGStatus {
+  DAG_PENDING = 0;
+  DAG_RUNNING = 1;
+  DAG_COMPLETED = 2;
+  DAG_FAILED = 3;
+  DAG_CANCELED = 4;
+}

@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package aacp.v1.caputxo;
+
+option go_package = "aacp/proto/aacp/v1/caputxo;caputxo";
+
+message CapabilityUTXO {
+  string utxo_id = 1;
+  bytes issuer = 2;
+  bytes holder = 3;
+  string cap_type = 4;
+  string cap_version = 5;
+  repeated string scopes = 6;
+  int64 issued_at = 7;
+  int64 expires_at = 8;
+  uint32 max_uses = 9;
+  uint32 used_count = 10;
+  bool delegatable = 11;
+  uint32 max_depth = 12;
+  uint32 cur_depth = 13;
+  string parent_utxo = 14;
+  UTXOStatus status = 15;
+  bytes holder_sig = 16;
+}
+
+enum UTXOStatus {
+  UTXO_UNSPENT = 0;
+  UTXO_SPENT = 1;
+  UTXO_EXPIRED = 2;
+  UTXO_REVOKED = 3;
+}
+
+message MintCapabilityPayload {
+  bytes holder = 1;
+  string cap_type = 2;
+  string cap_version = 3;
+  repeated string scopes = 4;
+  int64 expires_at = 5;
+  uint32 max_uses = 6;
+  bool delegatable = 7;
+  uint32 max_depth = 8;
+}
+
+message SpendCapabilityPayload {
+  string utxo_id = 1;
+  string task_id = 2;
+  string proof_of_use = 3;
+}
+
+message DelegateCapabilityPayload {
+  string parent_utxo_id = 1;
+  bytes new_holder = 2;
+  repeated string scopes = 3;
+  int64 expires_at = 4;
+  uint32 max_uses = 5;
+}

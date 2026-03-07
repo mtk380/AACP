@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package aacp.v1.node;
+
+option go_package = "aacp/proto/aacp/v1/node;node";
+
+message HardwareSpec {
+  uint32 cpu_cores = 1;
+  uint64 ram_mb = 2;
+  uint64 storage_gb = 3;
+  uint32 bandwidth_mbps = 4;
+  string arch = 5;
+  string gpu = 6;
+}
+
+message NodeRegistration {
+  bytes pubkey = 1;
+  NodeTier tier = 2;
+  string moniker = 3;
+  string endpoint = 4;
+  string region = 5;
+  HardwareSpec hw = 6;
+  string deposit_tx_id = 7;
+  int64 registered_at = 8;
+  bytes signature = 9;
+}
+
+enum NodeTier {
+  TIER_T0_VALIDATOR = 0;
+  TIER_T1_FULL = 1;
+  TIER_T2_ARCHIVE = 2;
+  TIER_T3_RELAY = 3;
+  TIER_T4_EDGE = 4;
+  TIER_T5_MICRO = 5;
+}

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package aacp.v1.afd;
+
+option go_package = "aacp/proto/aacp/v1/afd;afd";
+
+message FraudAlert {
+  string alert_id = 1;
+  string alert_type = 2;
+  Severity severity = 3;
+  Action action = 4;
+  repeated bytes involved_entities = 5;
+  string description = 6;
+  float confidence = 7;
+  int64 detected_at = 8;
+  string tx_hash = 9;
+}
+
+enum Severity {
+  SEV_LOW = 0;
+  SEV_MEDIUM = 1;
+  SEV_HIGH = 2;
+  SEV_CRITICAL = 3;
+}
+
+enum Action {
+  ACTION_ALLOW = 0;
+  ACTION_FLAG = 1;
+  ACTION_BLOCK = 2;
+  ACTION_BAN = 3;
+}

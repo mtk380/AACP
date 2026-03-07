@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package aacp.v1.amx;
+
+option go_package = "aacp/proto/aacp/v1/amx;amx";
+
+import "aacp/v1/common.proto";
+
+message CapabilityRef {
+  string cap_type = 1;
+  string min_version = 2;
+  repeated string required_scopes = 3;
+}
+
+message PricingModel {
+  string currency = 1;
+  string base_price = 2;
+  string unit = 3;
+}
+
+message SLATemplate {
+  uint32 max_latency_ms = 1;
+  float min_accuracy = 2;
+  uint32 max_retries = 3;
+  uint64 timeout_sec = 4;
+}
+
+message Listing {
+  string listing_id = 1;
+  bytes provider = 2;
+  string title = 3;
+  string description = 4;
+  repeated CapabilityRef capabilities = 5;
+  PricingModel pricing = 6;
+  SLATemplate sla = 7;
+  repeated string tags = 8;
+  ListingStatus status = 9;
+  int64 created_at = 10;
+  int64 updated_at = 11;
+}
+
+enum ListingStatus {
+  LISTING_ACTIVE = 0;
+  LISTING_PAUSED = 1;
+  LISTING_SUSPENDED = 2;
+  LISTING_DELISTED = 3;
+}
+
+message CreateListingPayload {
+  string title = 1;
+  string description = 2;
+  repeated CapabilityRef capabilities = 3;
+  PricingModel pricing = 4;
+  SLATemplate sla = 5;
+  repeated string tags = 6;
+}
+
+message SubmitRequestPayload {
+  repeated string required_caps = 1;
+  aacp.v1.Money budget = 2;
+  uint32 max_latency_ms = 3;
+  int64 deadline = 4;
+}
+
+message Order {
+  string order_id = 1;
+  string listing_id = 2;
+  bytes consumer = 3;
+  bytes provider = 4;
+  aacp.v1.Money agreed_price = 5;
+  uint32 commission_bps = 6;
+  aacp.v1.Money commission_amount = 7;
+  string escrow_id = 8;
+  string task_id = 9;
+  OrderStatus status = 10;
+  int64 created_at = 11;
+  int64 updated_at = 12;
+}
+
+enum OrderStatus {
+  ORDER_MATCHING = 0;
+  ORDER_MATCHED = 1;
+  ORDER_ESCROWED = 2;
+  ORDER_ACTIVE = 3;
+  ORDER_COMPLETED = 4;
+  ORDER_DISPUTED = 5;
+  ORDER_CANCELED = 6;
+  ORDER_FAILED = 7;
+  ORDER_REJECTED = 8;
+}

@@ -1,0 +1,76 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 4044 >>
+stream
+BT /F2 19.00 Tf 1 0 0 1 46.00 760.00 Tm (AACP App Summary \(Repo-Based\)) Tj ET
+BT /F1 10.30 Tf 1 0 0 1 46.00 735.00 Tm (One-page brief generated from repository evidence only - 2026-03-01) Tj ET
+BT /F2 12.60 Tf 1 0 0 1 46.00 719.00 Tm (What it is) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 46.00 702.00 Tm (AACP v0.9.0 is a Go implementation scaffold for the AACP technical specification.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 46.00 688.50 Tm (It provides a testnet-grade execution baseline with module routing, deterministic) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 46.00 675.00 Tm (state commits, and ABCI-style lifecycle hooks.) Tj ET
+BT /F2 12.60 Tf 1 0 0 1 46.00 653.50 Tm (Who it's for) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 46.00 636.50 Tm (Primary user/persona: Not found in repo.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 46.00 623.00 Tm (Closest evidence suggests protocol and blockchain engineers building or testing AACP) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 46.00 609.50 Tm (modules in Go.) Tj ET
+BT /F2 12.60 Tf 1 0 0 1 46.00 588.00 Tm (What it does) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 571.00 Tm (- Runs an HTTP daemon \(`cmd/aacpd`\) with `/api/health`, `/api/finalize-empty`,) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 557.50 Tm (  and `/api/finalize`.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 544.00 Tm (- Validates transactions end-to-end: decode, basic checks, timeout height,) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 530.50 Tm (  signature, nonce, and gas accounting.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 517.00 Tm (- Dispatches module actions through a router to AMX, AAP, WEAVE, Cap-UTXO, REP,) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 503.50 Tm (  ARB, AFD, FIAT, NODE, and GOV.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 490.00 Tm (- Commits state each block and returns `app_hash`; supports `memory` \(default\)) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 476.50 Tm (  or `iavl` backends via `AACP_STATE_BACKEND`.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 463.00 Tm (- Collects and flushes block/module events through an internal event bus.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 449.50 Tm (- Ships supporting executables: CLI \(`cmd/aacp-cli`\), relay heartbeat process) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 436.00 Tm (  \(`cmd/aacp-relay`\), and testnet docker compose.) Tj ET
+BT /F2 12.60 Tf 1 0 0 1 46.00 414.50 Tm (How it works \(architecture overview\)) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 397.50 Tm (- Client flow: `aacp-cli` or curl sends tx bytes to `aacpd` HTTP handlers.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 384.00 Tm (- `aacpd` initializes `abci.App`, tracks height, and calls `FinalizeBlock` per) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 370.50 Tm (  request.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 357.00 Tm (- Finalize pipeline: `DecodeTx -> ValidateBasic -> VerifySignature -> Nonce/Gas) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 343.50 Tm (  checks -> router.Execute`.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 330.00 Tm (- Router invokes module handlers; modules persist domain state in) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 316.50 Tm (  `internal/state.Store` and emit events.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 303.00 Tm (- EndBlock aggregates module events, `Commit\(\)` computes new hash/version, and) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 289.50 Tm (  responses return tx results plus events.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 276.00 Tm (- Optional CometBFT bridge exists behind build tag in) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 262.50 Tm (  `internal/abci/comet_adapter.go`.) Tj ET
+BT /F2 12.60 Tf 1 0 0 1 46.00 241.00 Tm (How to run \(minimal getting started\)) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 224.00 Tm (- Install prerequisites: Go >= 1.22; `buf` or `protoc` for proto generation.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 210.50 Tm (- On macOS, optional helper: `./scripts/bootstrap_dev_tools.sh`.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 197.00 Tm (- From repo root: `make test` then `make build`.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 183.50 Tm (- Start daemon: `go run ./cmd/aacpd --port=8888`.) Tj ET
+BT /F1 11.00 Tf 1 0 0 1 54.00 170.00 Tm (- Verify: `curl -sS http://127.0.0.1:8888/api/health`.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000257 00000 n 
+0000004353 00000 n 
+0000004423 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+4498
+%%EOF

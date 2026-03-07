@@ -1,0 +1,1164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AACP Story Demo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      color-scheme: dark;
+      --bg-0: #000000;
+      --bg-1: #080808;
+      --bg-2: #0f0f0f;
+      --surface: #111111;
+      --surface-2: #161616;
+      --surface-3: #1a1a1a;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(255, 255, 255, 0.12);
+      --border-active: rgba(255, 255, 255, 0.18);
+      --text: #ffffff;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #666666;
+      --primary: #00D26A;
+      --primary-dim: rgba(0, 210, 106, 0.12);
+      --primary-glow: rgba(0, 210, 106, 0.3);
+      --accent: #00B8D4;
+      --accent-dim: rgba(0, 184, 212, 0.1);
+      --ok: #00D26A;
+      --bad: #FF4757;
+      --warn: #FFAA00;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
+
+    body {
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-0);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 64px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topnav-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: #000;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-tab {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      background: none;
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-tab.active {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .topnav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 8px var(--primary-glow);
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.offline {
+      background: var(--bad);
+      box-shadow: 0 0 8px rgba(255, 71, 87, 0.3);
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .node-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 11px;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, monospace;
+      color: var(--text-tertiary);
+    }
+
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    .page-section {
+      display: none;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    .section-header {
+      margin-bottom: 32px;
+    }
+
+    .section-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .section-header h1 .gradient-text {
+      background: linear-gradient(90deg, #fff 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 720px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 20px;
+      transition: border-color var(--transition);
+    }
+
+    .stat-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .stat-value.ok { color: var(--ok); }
+    .stat-value.bad { color: var(--bad); }
+
+    .stat-sub {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-top: 4px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: border-color var(--transition);
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .card-badge.live {
+      background: var(--primary-dim);
+      color: var(--primary);
+    }
+
+    .card-badge.error {
+      background: rgba(255, 71, 87, 0.12);
+      color: var(--bad);
+    }
+
+    .card-desc {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: var(--border-hover);
+      background: var(--surface-3);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: #00e676;
+      border-color: #00e676;
+      box-shadow: 0 4px 20px var(--primary-glow);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-secondary);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: var(--border-hover);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .btn-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .kv-grid {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 8px 16px;
+      font-size: 13px;
+    }
+
+    .kv-label {
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+
+    .kv-value {
+      color: var(--text-secondary);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, monospace;
+      font-size: 12px;
+      word-break: break-all;
+    }
+
+    .hint-text {
+      margin-top: 12px;
+      color: var(--text-tertiary);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .hint-text code {
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-1);
+      color: var(--text);
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: border-color var(--transition);
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-dim);
+    }
+
+    textarea {
+      font-family: 'SF Mono', SFMono-Regular, Consolas, monospace;
+      font-size: 12px;
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    label {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    pre.output-box {
+      width: 100%;
+      min-height: 200px;
+      max-height: 400px;
+      overflow: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-1);
+      color: var(--text-secondary);
+      padding: 16px;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+    }
+
+    .story-hero {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(0, 210, 106, 0.04) 0%, rgba(0, 184, 212, 0.03) 100%);
+      padding: 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .story-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--primary-dim) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .story-hero h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .story-hero > p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.7;
+      max-width: 680px;
+      position: relative;
+    }
+
+    .story-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+      position: relative;
+    }
+
+    .story-info-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 20px;
+    }
+
+    .story-info-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .story-info-card .guide-list {
+      list-style: none;
+      padding: 0;
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .story-info-card .guide-list li {
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .story-info-card .guide-list li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .story-summary-text {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, monospace;
+    }
+
+    .story-steps-list {
+      margin-top: 24px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .story-step {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 16px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition);
+    }
+
+    .story-step:hover {
+      border-color: var(--border-hover);
+    }
+
+    .story-step::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--text-tertiary);
+    }
+
+    .story-step.ok::before {
+      background: var(--ok);
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    .story-step.bad::before {
+      background: var(--bad);
+      box-shadow: 0 0 12px rgba(255, 71, 87, 0.3);
+    }
+
+    .story-step h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .story-step > p {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .story-meta {
+      margin-top: 8px;
+      color: var(--text-tertiary);
+      font-size: 12px;
+      line-height: 1.5;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, monospace;
+      word-break: break-all;
+    }
+
+    .story-meta code {
+      color: var(--text-secondary);
+    }
+
+    details {
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    summary {
+      cursor: pointer;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 12px;
+      transition: background var(--transition);
+      user-select: none;
+    }
+
+    summary:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+    }
+
+    .story-detail-grid {
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .story-detail-box {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      background: var(--bg-1);
+    }
+
+    .story-detail-box strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .story-detail-box p {
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 4px 0;
+    }
+
+    .story-detail-box code {
+      color: var(--primary);
+      font-size: 11px;
+    }
+
+    .story-json {
+      margin: 0;
+      max-height: 200px;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px;
+      background: #050505;
+      color: var(--text-secondary);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .story-events {
+      margin: 6px 0 0;
+      padding-left: 16px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-tertiary);
+      font-size: 14px;
+    }
+
+    .empty-state .icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      opacity: 0.3;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 1024px) {
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-3, .story-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .topnav {
+        padding: 0 16px;
+      }
+
+      .topnav-left {
+        gap: 16px;
+      }
+
+      .nav-tabs {
+        display: none;
+      }
+
+      .main-content {
+        padding: 20px 16px;
+      }
+
+      .story-hero {
+        padding: 20px;
+      }
+
+      .story-hero h1 {
+        font-size: 22px;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 14px;
+      }
+
+      .form-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+
+      .node-badge {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <div class="topnav-left">
+      <a class="logo" href="#">
+        <div class="logo-icon">A</div>
+        <span class="logo-text">AACP</span>
+      </a>
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-page="story">Story Demo</button>
+      </div>
+    </div>
+    <div class="topnav-right">
+      <span class="status-pill">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="health-state">Connecting...</span>
+      </span>
+      <span class="node-badge" id="node-url"></span>
+    </div>
+  </nav>
+
+  <div class="main-content">
+
+    <!-- ========== PAGE: Story Demo ========== -->
+    <section class="page-section active" id="page-story">
+
+      <div class="story-hero">
+        <h1>奶茶店老板找设计师做海报</h1>
+        <p>点击一次就把 匹配 → 托管 → 交付 → 争议 → 退款 完整跑完，再展开每一步看代码实现、输入输出和状态变化。</p>
+        <div class="btn-row" style="margin-top: 20px; position: relative;">
+          <button id="btn-run-story-demo" class="btn btn-primary">Start Story Demo</button>
+          <button id="btn-reset-story-demo" class="btn btn-ghost">Reset</button>
+        </div>
+
+        <div class="story-cards">
+          <div class="story-info-card">
+            <h3>Without AACP</h3>
+            <ul id="story-without" class="guide-list"></ul>
+          </div>
+          <div class="story-info-card">
+            <h3>With AACP</h3>
+            <ul id="story-with" class="guide-list"></ul>
+          </div>
+          <div class="story-info-card">
+            <h3>Conclusion</h3>
+            <p id="story-summary" class="story-summary-text">Click "Start Story Demo" to run the full lifecycle.</p>
+            <div class="chip-row">
+              <span class="chip" id="story-order-status">order: -</span>
+              <span class="chip" id="story-task-status">task: -</span>
+              <span class="chip" id="story-escrow-status">escrow: -</span>
+              <span class="chip" id="story-dispute-status">dispute: -</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="story-steps" class="story-steps-list"></div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Response Output</span>
+        </div>
+        <pre class="output-box" id="output">{}</pre>
+      </div>
+
+    </section>
+
+  </div>
+
+  <script>
+    const output = document.getElementById("output");
+    const nodeUrl = document.getElementById("node-url");
+    nodeUrl.textContent = window.location.origin;
+
+    /* ── Tab Navigation ── */
+    const tabs = document.querySelectorAll(".nav-tab");
+    const pages = document.querySelectorAll(".page-section");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.page;
+        tabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        pages.forEach((p) => {
+          p.classList.toggle("active", p.id === `page-${target}`);
+        });
+      });
+    });
+
+    /* ── Helpers ── */
+    function escapeHTML(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("\"", "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function setBusy(button, busy) {
+      button.disabled = busy;
+      if (busy) button.dataset.oldText = button.textContent;
+      button.textContent = busy ? "Processing..." : (button.dataset.oldText || button.textContent);
+    }
+
+    function renderOutput(title, data) {
+      if (!output) return;
+      output.textContent = `[${new Date().toLocaleString()}] ${title}\n` + JSON.stringify(data, null, 2);
+    }
+
+    function parseTimestamp(ts) {
+      if (!ts) return "-";
+      const d = new Date(ts * 1000);
+      if (Number.isNaN(d.getTime())) return String(ts);
+      return d.toLocaleString();
+    }
+
+    async function fetchJSON(url, options = {}) {
+      const resp = await fetch(url, options);
+      const text = await resp.text();
+      let json;
+      try {
+        json = text ? JSON.parse(text) : {};
+      } catch (err) {
+        throw new Error(`Response is not JSON: ${text.slice(0, 240)}`);
+      }
+      if (!resp.ok) {
+        throw new Error(json.error || json.message || text || `HTTP ${resp.status}`);
+      }
+      return json;
+    }
+
+    /* ── Health ── */
+    async function refreshHealth() {
+      const stateEl = document.getElementById("health-state");
+      const dot = document.getElementById("status-dot");
+      const healthStatus = document.getElementById("health-status");
+      const healthHeight = document.getElementById("health-height");
+      const healthHash = document.getElementById("health-hash");
+      const healthTimestamp = document.getElementById("health-ts");
+      try {
+        const data = await fetchJSON("/api/health");
+        if (healthStatus) {
+          healthStatus.textContent = data.status ?? "-";
+          healthStatus.className = "stat-value ok";
+        }
+        if (healthHeight) healthHeight.textContent = String(data.height ?? "-");
+        if (healthHash) healthHash.textContent = data.app_hash ?? "-";
+        if (healthTimestamp) healthTimestamp.textContent = parseTimestamp(data.timestamp);
+        if (stateEl) stateEl.textContent = "Connected";
+        if (dot) dot.className = "status-dot";
+        return data;
+      } catch (err) {
+        if (stateEl) stateEl.textContent = "Offline";
+        if (dot) dot.className = "status-dot offline";
+        if (healthStatus) healthStatus.className = "stat-value bad";
+        throw err;
+      }
+    }
+
+    /* ── Story Demo ── */
+    function setStoryStatusChip(id, label, value) {
+      const node = document.getElementById(id);
+      node.textContent = `${label}: ${value || "-"}`;
+    }
+
+    function resetStoryDemo(silent = false) {
+      document.getElementById("story-without").innerHTML = "";
+      document.getElementById("story-with").innerHTML = "";
+      document.getElementById("story-steps").innerHTML = "";
+      document.getElementById("story-summary").textContent = 'Click "Start Story Demo" to run the full lifecycle.';
+      setStoryStatusChip("story-order-status", "order", "-");
+      setStoryStatusChip("story-task-status", "task", "-");
+      setStoryStatusChip("story-escrow-status", "escrow", "-");
+      setStoryStatusChip("story-dispute-status", "dispute", "-");
+      if (!silent) renderOutput("Story demo reset", {});
+    }
+
+    function renderStringList(containerId, values) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      for (const value of (Array.isArray(values) ? values : [])) {
+        const item = document.createElement("li");
+        item.textContent = value;
+        container.appendChild(item);
+      }
+    }
+
+    function formatStoryJSON(data) {
+      if (data === null || data === undefined) return "-";
+      if (typeof data !== "object") return escapeHTML(String(data));
+      if (Array.isArray(data) && data.length === 0) return "-";
+      if (!Array.isArray(data) && Object.keys(data).length === 0) return "-";
+      return escapeHTML(JSON.stringify(data, null, 2));
+    }
+
+    function renderStoryEvents(events) {
+      if (!Array.isArray(events) || events.length === 0) {
+        return "<li>No events</li>";
+      }
+      return events.map((event, index) => {
+        const eventType = escapeHTML(event?.type || "unknown_event");
+        const attrs = event?.attributes && typeof event.attributes === "object"
+          ? Object.entries(event.attributes).map(([key, value]) => `${escapeHTML(key)}=${escapeHTML(String(value))}`).join(", ")
+          : "";
+        return `<li>${index + 1}. ${eventType}${attrs ? ` (${attrs})` : ""}</li>`;
+      }).join("");
+    }
+
+    function renderStorySteps(steps) {
+      const container = document.getElementById("story-steps");
+      container.innerHTML = "";
+      for (const step of (Array.isArray(steps) ? steps : [])) {
+        const card = document.createElement("article");
+        card.className = `story-step ${step.success ? "ok" : "bad"}`;
+        const title = escapeHTML(step.title || "Untitled step");
+        const why = escapeHTML(step.why || "");
+        const moduleAction = `${escapeHTML(step.module || "-")}/${escapeHTML(step.action || "-")}`;
+        const implementation = step.implementation || {};
+        const outcome = step.outcome || {};
+        const code = outcome.code ?? "-";
+        const gasUsed = outcome.gas_used ?? "-";
+        const height = step.height ?? "-";
+        const sender = escapeHTML(step.sender || "-");
+        const nonce = step.nonce ?? "-";
+        const txHash = String(step.tx_hash || "");
+        const txShort = txHash
+          ? escapeHTML(txHash.length > 18 ? `${txHash.slice(0, 12)}...${txHash.slice(-8)}` : txHash)
+          : "-";
+        const implFile = escapeHTML(implementation.file || "-");
+        const implFunc = escapeHTML(implementation.function || "-");
+        const implBehavior = escapeHTML(implementation.behavior || "-");
+        const logText = escapeHTML(outcome.log || "-");
+        const eventsHTML = renderStoryEvents(outcome.events);
+        const inputJSON = formatStoryJSON(step.input);
+        const beforeJSON = formatStoryJSON(step.state_before);
+        const afterJSON = formatStoryJSON(step.state_after);
+
+        card.innerHTML = `
+          <h4>Step ${step.no ?? "?"}: ${title}</h4>
+          <p>${why}</p>
+          <div class="story-meta">exec: <code>${moduleAction}</code> | code=${code} | gas=${gasUsed} | height=${height}</div>
+          <div class="story-meta">sender: ${sender} | nonce=${nonce} | tx=${txShort}</div>
+          <details>
+            <summary>Inspect this step</summary>
+            <div class="story-detail-grid">
+              <div class="story-detail-box">
+                <strong>Implementation</strong>
+                <p>File: <code>${implFile}</code></p>
+                <p>Func: <code>${implFunc}</code></p>
+                <p>${implBehavior}</p>
+              </div>
+              <div class="story-detail-box">
+                <strong>Input Payload</strong>
+                <pre class="story-json">${inputJSON}</pre>
+              </div>
+              <div class="story-detail-box">
+                <strong>Execution Result</strong>
+                <p>code=${code} | gas=${gasUsed}</p>
+                <p>log: ${logText}</p>
+                <ul class="story-events">${eventsHTML}</ul>
+              </div>
+              <div class="story-detail-box">
+                <strong>State Before</strong>
+                <pre class="story-json">${beforeJSON}</pre>
+              </div>
+              <div class="story-detail-box">
+                <strong>State After</strong>
+                <pre class="story-json">${afterJSON}</pre>
+              </div>
+            </div>
+          </details>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    async function runStoryDemo() {
+      const button = document.getElementById("btn-run-story-demo");
+      setBusy(button, true);
+      resetStoryDemo(true);
+      try {
+        const data = await fetchJSON("/api/demo/story-poster", { method: "POST" });
+        renderStringList("story-without", data.without_aacp);
+        renderStringList("story-with", data.with_aacp);
+        renderStorySteps(data.steps);
+        document.getElementById("story-summary").textContent = data.summary || "Demo complete";
+        setStoryStatusChip("story-order-status", "order", data.final_state?.order_status);
+        setStoryStatusChip("story-task-status", "task", data.final_state?.task_status);
+        setStoryStatusChip("story-escrow-status", "escrow", data.final_state?.escrow_status);
+        const disputeStatus = data.final_state?.dispute_status || "-";
+        const winner = data.final_state?.dispute_winner;
+        setStoryStatusChip("story-dispute-status", "dispute", winner ? `${disputeStatus} (${winner})` : disputeStatus);
+        renderOutput("Story demo result", data);
+        await refreshHealth();
+      } catch (err) {
+        document.getElementById("story-summary").textContent = `Demo failed: ${err.message}`;
+        renderOutput("Story demo failed", { error: err.message });
+      } finally {
+        setBusy(button, false);
+      }
+    }
+
+    /* ── Event Bindings ── */
+    document.getElementById("btn-run-story-demo").addEventListener("click", runStoryDemo);
+    document.getElementById("btn-reset-story-demo").addEventListener("click", () => resetStoryDemo(false));
+
+    /* ── Init ── */
+    resetStoryDemo(true);
+    refreshHealth()
+      .then((data) => renderOutput("Initialized", data))
+      .catch((err) => renderOutput("Init failed", { error: err.message }));
+
+    setInterval(() => { refreshHealth().catch(() => {}); }, 8000);
+  </script>
+</body>
+</html>

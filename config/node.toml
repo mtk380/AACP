@@ -1,0 +1,63 @@
+[node]
+moniker = "my-validator-01"
+tier = "T0_VALIDATOR"
+region = "cn-east"
+data_dir = "/data/aacp"
+log_level = "info"
+log_format = "json"
+
+[network]
+listen_addr = "0.0.0.0:26656"
+rpc_addr = "0.0.0.0:26657"
+grpc_addr = "0.0.0.0:9090"
+rest_addr = "0.0.0.0:1317"
+seeds = ""
+persistent_peers = ""
+max_peers = 100
+external_addr = ""
+
+[consensus]
+timeout_propose = "3s"
+timeout_prevote = "1s"
+timeout_precommit = "1s"
+timeout_commit = "2s"
+max_block_bytes = 4194304
+max_gas = 20000000
+
+[mempool]
+max_txs = 5000
+max_tx_bytes = 262144
+max_batch_bytes = 1048576
+cache_size = 10000
+
+[state]
+db_backend = "badgerdb"
+iavl_cache_size = 500000
+pruning = "default"
+pruning_keep_recent = 100000
+pruning_interval = 100
+
+[ipfs]
+api_url = "http://localhost:5001"
+gateway_url = "http://localhost:8080"
+pin_timeout = "30s"
+
+[fiat_gateway]
+provider = "stripe"
+api_endpoint = "https://api.stripe.com/v1"
+webhook_secret = "${FIAT_WEBHOOK_SECRET}"
+escrow_account = "${ESCROW_ACCOUNT_ID}"
+
+[relay]
+cache_ttl_sec = 60
+max_cached_listings = 10000
+cross_region_enabled = true
+upstream_relays = []
+
+[telemetry]
+prometheus_enabled = true
+prometheus_addr = "0.0.0.0:9100"
+pprof_enabled = false
+pprof_addr = "127.0.0.1:6060"
+tracing_enabled = false
+tracing_endpoint = "jaeger:4318"

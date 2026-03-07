@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package aacp.v1.fiat;
+
+option go_package = "aacp/proto/aacp/v1/fiat;fiat";
+
+import "aacp/v1/common.proto";
+
+message Escrow {
+  string escrow_id = 1;
+  string order_id = 2;
+  bytes consumer = 3;
+  bytes provider = 4;
+  aacp.v1.Money total_amount = 5;
+  aacp.v1.Money service_fee = 6;
+  aacp.v1.Money commission = 7;
+  uint32 commission_bps = 8;
+  EscrowStatus status = 9;
+  int64 created_at = 10;
+  int64 funded_at = 11;
+  int64 released_at = 12;
+  string gateway_tx_id = 13;
+}
+
+enum EscrowStatus {
+  ESCROW_PENDING = 0;
+  ESCROW_FUNDED = 1;
+  ESCROW_LOCKED = 2;
+  ESCROW_RELEASING = 3;
+  ESCROW_RELEASED = 4;
+  ESCROW_REFUNDED = 5;
+  ESCROW_SLASHED = 6;
+  ESCROW_CANCELED = 7;
+}
+
+message DepositAccount {
+  bytes provider = 1;
+  string currency = 2;
+  string total_deposited = 3;
+  string available = 4;
+  string frozen = 5;
+  string slashed = 6;
+  int64 last_deposit_at = 7;
+  int64 last_withdraw_at = 8;
+  string tier = 9;
+}
+
+message InsurancePool {
+  string balance_cny = 1;
+  string balance_usd = 2;
+  string total_income = 3;
+  string total_payout = 4;
+  string max_single_payout = 5;
+  uint32 safety_ratio_bps = 6;
+}

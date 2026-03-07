@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package aacp.v1;
+
+option go_package = "aacp/proto/aacp/v1;v1";
+
+message TxEnvelope {
+  bytes sender = 1;
+  uint64 nonce = 2;
+  uint64 gas_limit = 3;
+  uint64 gas_price = 4;
+  string module = 5;
+  string action = 6;
+  bytes payload = 7;
+  bytes signature = 8;
+  string memo = 9;
+  int64 timeout_height = 10;
+}

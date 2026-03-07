@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package aacp.v1.arb;
+
+option go_package = "aacp/proto/aacp/v1/arb;arb";
+
+import "aacp/v1/common.proto";
+
+message EvidenceItem {
+  bytes submitter = 1;
+  string evidence_type = 2;
+  string ipfs_cid = 3;
+  bytes inline_data = 4;
+  string content_hash = 5;
+  int64 submitted_at = 6;
+  bytes signature = 7;
+}
+
+message VoteRecord {
+  bytes validator = 1;
+  string vote = 2;
+  string reasoning = 3;
+  int64 voted_at = 4;
+  bytes signature = 5;
+}
+
+message Verdict {
+  string winner = 1;
+  string split_ratio = 2;
+  aacp.v1.Money refund_amount = 3;
+  aacp.v1.Money slash_amount = 4;
+  int32 plaintiff_rep_delta = 5;
+  int32 defendant_rep_delta = 6;
+  bool ban_defendant = 7;
+  string reasoning = 8;
+  repeated VoteRecord votes = 9;
+}
+
+message Dispute {
+  string dispute_id = 1;
+  string order_id = 2;
+  string task_id = 3;
+  bytes plaintiff = 4;
+  bytes defendant = 5;
+  string reason_code = 6;
+  string description = 7;
+  repeated EvidenceItem plaintiff_evidence = 8;
+  repeated EvidenceItem defendant_evidence = 9;
+  ArbitrationPhase phase = 10;
+  DisputeStatus status = 11;
+  Verdict verdict = 12;
+  repeated bytes committee_members = 13;
+  repeated VoteRecord committee_votes = 14;
+  repeated VoteRecord full_votes = 15;
+  int64 filed_at = 16;
+  int64 resolved_at = 17;
+}
+
+enum ArbitrationPhase {
+  PHASE_AUTO = 0;
+  PHASE_COMMITTEE = 1;
+  PHASE_FULL = 2;
+}
+
+enum DisputeStatus {
+  DISPUTE_FILED = 0;
+  DISPUTE_AUTO_REVIEW = 1;
+  DISPUTE_AUTO_RESOLVED = 2;
+  DISPUTE_COMM_REVIEW = 3;
+  DISPUTE_COMM_RESOLVED = 4;
+  DISPUTE_FULL_REVIEW = 5;
+  DISPUTE_FINAL_RESOLVED = 6;
+}
