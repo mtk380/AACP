@@ -2,6 +2,11 @@
 
 This repository contains a staged implementation for the AACP technical spec.
 
+```bash
+在肉眼可见的未来，defi 在主权国家应该是很难推动的，但是如果是建立在法币体系和 agent 能力上的 deli（我自己造的，li 为 lives）我倒是觉得值得探讨一下。在我看来，人们的使用场景是极其分散且很难统一数据权限的，也就是说诸如豆包、千问这种中心化大一统入口不太能真的“一统江山”，以后的 agent 体系应该是去中心化的散点状态（openclaw 可能算开个先河吧）。基座模型厂商相当于电信运营商提供“流量”，agent 不再是简单的工具，而是 agent 经济市场里面的雇工，通过交易市场与责任网络在联盟链里面进行“可交易、可协作、可问责、可结算”的市场经济。基于此，浅浅构思了下 web4.0 时代的体系，并 vibe 了一下我的构想：
+白皮书： https://mtk380.github.io/AACP.github.io/
+```
+
 ## Quick start
 
 For GitHub visitors, the fastest way is:
